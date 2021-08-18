@@ -1,24 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Home from './views/Home';
+import Manager from './views/Manager';
+import { useEffect, useState } from 'react';
+import './normalize.css'
 
 function App() {
+  const [dataUser, setDataUser] = useState({ user: '', status: false })
+
+  useEffect(() => {
+    const data = localStorage.getItem('dataUser');
+    if (data !== null && data !== null) {
+      console.log('storageUserapp')
+      setDataUser(JSON.parse(data))
+    }
+  }, [])
+  useEffect(() => {
+    if (dataUser.user !== '') {
+      localStorage.setItem('dataUser', JSON.stringify(dataUser));
+      console.log('storageUserappp')
+    }
+  }, [dataUser])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Route exact path='/manager'>
+        <Manager dataUser={dataUser} setDataUser={setDataUser} />
+      </Route>
+      <Route exact path='/'>
+        <Home dataUser={dataUser} setDataUser={setDataUser} />
+      </Route>
+    </Router>
   );
 }
 
